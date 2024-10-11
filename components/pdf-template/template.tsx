@@ -5,12 +5,18 @@ type CodeToPDFProps = {
   question: string
   code: string
   output: string
+  language?: string
+  theme?: string
+  wrapCode?: boolean | undefined
 }
 
 export const generatePDF = async ({
   question,
   code,
   output,
+  language,
+  theme,
+  wrapCode,
 }: CodeToPDFProps) => {
   const MyDocument = (
     <Document>

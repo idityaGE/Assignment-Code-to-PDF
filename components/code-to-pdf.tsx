@@ -5,21 +5,50 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
-import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { generatePDF } from './pdf-template/template'
 import { useLocalStorage } from '@/hook/useLocalStorage'
 
+import { languages } from '@/utils/languages'
+import { themes } from '@/utils/themes'
+import { useEffect, useState } from "react"
 
-SyntaxHighlighter.registerLanguage('javascript', js)
+
 
 export default function PDFGenerator() {
   const [question, setQuestion] = useLocalStorage('pdfGenerator_question', '');
   const [code, setCode] = useLocalStorage('pdfGenerator_code', '');
   const [output, setOutput] = useLocalStorage('pdfGenerator_output', '');
+  const [language, setLanguage] = useLocalStorage('pdfGenerator_language', 'javascript');
+  const [theme, setTheme] = useLocalStorage('pdfGenerator_theme', 'docco');
+  const [wrapCode, setWrapCode] = useLocalStorage('pdfGenerator_wrapCode', false);
+
+  const handleGeneratePDF = () => {
+    generatePDF({ question, code, output, language, theme, wrapCode });
+  };
+
+  const [style, setStyle] = useState(a11yDark || null);
+
+  useEffect(() => {
+    async function loadStyle() {
+      try {
+        const themeStyle = await import(
+          `react-syntax-highlighter/dist/cjs/styles/prism/${theme}`
+        );
+        setStyle(themeStyle.default);
+      } catch (error) {
+        console.error("Error loading theme:", error);
+        setStyle(a11yDark);
+      }
+    }
+
+    loadStyle();
+  }, [theme]);
 
   return (
     <div className="container mx-auto p-4">
@@ -61,10 +90,50 @@ export default function PDFGenerator() {
                     rows={8}
                   />
                 </div>
+                <div className="flex space-x-4">
+                  <div className="flex-1">
+                    <Label htmlFor="language">Language</Label>
+                    <Select value={language} onValueChange={setLanguage}>
+                      <SelectTrigger id="language">
+                        <SelectValue placeholder="Select Language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {languages.map((lang) => (
+                          <SelectItem key={lang.value} value={lang.value}>
+                            {lang.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex-1">
+                    <Label htmlFor="theme">Theme</Label>
+                    <Select value={theme} onValueChange={setTheme}>
+                      <SelectTrigger id="theme">
+                        <SelectValue placeholder="Select Theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {themes.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            {t.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="wrap-code"
+                    checked={wrapCode}
+                    onCheckedChange={setWrapCode}
+                  />
+                  <Label htmlFor="wrap-code">Wrap Code</Label>
+                </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => generatePDF({ question, code, output })}>Generate PDF</Button>
+              <Button onClick={handleGeneratePDF}>Generate PDF</Button>
             </CardFooter>
           </Card>
         </div>
@@ -82,8 +151,13 @@ export default function PDFGenerator() {
                   </div>
                   <div>
                     <h3 className="font-bold">Code:</h3>
-                    <div className="overflow-y-auto">
-                      <SyntaxHighlighter language="javascript" style={docco}>
+                    <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
+                      <SyntaxHighlighter
+                        language={language}
+                        style={style}
+                        wrapLongLines={true}
+                        showLineNumbers={true}
+                      >
                         {code}
                       </SyntaxHighlighter>
                     </div>
