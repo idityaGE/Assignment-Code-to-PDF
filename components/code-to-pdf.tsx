@@ -10,14 +10,16 @@ import { Switch } from "@/components/ui/switch"
 
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
-import { generatePDF } from './pdf-template/template'
 import { useLocalStorage } from '@/hook/useLocalStorage'
 
 import { languages } from '@/utils/languages'
 import { themes } from '@/utils/themes'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 import { PreviewSection } from "./preview-section"
+
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 
 export default function PDFGenerator() {
@@ -29,8 +31,22 @@ export default function PDFGenerator() {
   const [wrapCode, setWrapCode] = useLocalStorage('pdfGenerator_wrapCode', "true");
   const [showLineNumbers, setShowLineNumbers] = useLocalStorage('pdfGenerator_showLineNumbers', "true");
 
-  const handleGeneratePDF = () => {
-    generatePDF({ question, code, output, language, theme, wrapCode, showLineNumbers });
+  const previewRef = useRef<HTMLDivElement | null>(null)
+
+  const handleGeneratePDF = async () => {
+    const input = previewRef.current;
+    if (!input) return;
+
+    const canvas = await html2canvas(input);
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("assignment.pdf");
   };
 
   const [style, setStyle] = useState(a11yDark || null);
@@ -153,15 +169,17 @@ export default function PDFGenerator() {
               <CardHeader>
                 <CardTitle>Preview</CardTitle>
               </CardHeader>
-              <PreviewSection
-                code={code}
-                question={question}
-                output={output}
-                language={language}
-                style={style}
-                wrapCode={wrapCode}
-                showLineNumbers={showLineNumbers}
-              />
+              <div ref={previewRef}>
+                <PreviewSection
+                  code={code}
+                  question={question}
+                  output={output}
+                  language={language}
+                  style={style}
+                  wrapCode={wrapCode}
+                  showLineNumbers={showLineNumbers}
+                />
+              </div>
             </Card>
           </div>
         </ScrollArea>
