@@ -3,17 +3,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import { CardContent } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { PreviewSectionProps } from '@/utils/types'
 
-interface PreviewSectionProps {
-  code: string
-  question: string
-  output: string
-  language: string
-  theme: string
-  wrapCode: boolean
-  showLineNumbers: boolean
-  questionNumber: number
-}
 
 export const PreviewSection = ({ code, question, output, language, theme, wrapCode, showLineNumbers, questionNumber }: PreviewSectionProps) => {
   const [style, setStyle] = useState<any>(a11yDark)

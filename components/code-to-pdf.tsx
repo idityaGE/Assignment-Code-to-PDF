@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,21 +9,19 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+
 import { useLocalStorage } from '@/hook/useLocalStorage'
+
 import { languages } from '@/utils/languages'
 import { themes } from '@/utils/themes'
-import { PreviewSection } from "./preview-section"
-import { IntialCode, IntialOutput, IntialQuestion } from '@/lib/intialtext'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { IntialCode, IntialOutput, IntialQuestion } from '@/utils/intialtext'
+import { Question } from "@/utils/types"
 
-interface Question {
-  id: string
-  question: string
-  code: string
-  output: string
-  language: string
-}
+import { PreviewSection } from "./preview-section"
+
+
 
 export default function PDFGenerator() {
   const [questions, setQuestions] = useLocalStorage<Question[]>('pdfGenerator_questions', [
@@ -35,10 +34,12 @@ export default function PDFGenerator() {
     }
   ])
   const [theme, setTheme] = useLocalStorage('pdfGenerator_theme', 'a11y-dark')
+  
   const [wrapCode, setWrapCode] = useState<boolean>(true)
   const [showLineNumbers, setShowLineNumbers] = useState<boolean>(true)
 
   const previewRef = useRef<HTMLDivElement | null>(null)
+
 
   const handleAddQuestion = () => {
     const newQuestion: Question = {
@@ -69,6 +70,7 @@ export default function PDFGenerator() {
     setQuestions(items)
   }
 
+
   const handleGeneratePDF = async () => {
     const html2canvas = (await import('html2canvas')).default
     const jsPDF = (await import('jspdf')).default
@@ -80,7 +82,7 @@ export default function PDFGenerator() {
     })
 
     // Wait for accordions to expand
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise(resolve => setTimeout(resolve, 800))
 
     let pdf = null // Declare pdf variable here
     for (let i = 0; i < questions.length; i++) {
