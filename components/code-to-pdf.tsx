@@ -17,8 +17,8 @@ import { themes } from '@/utils/themes'
 import { useEffect, useState, useRef } from "react"
 
 import { PreviewSection } from "./preview-section"
-import html2pdf from 'html2pdf.js'
 import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 
 export default function PDFGenerator() {
@@ -33,13 +33,33 @@ export default function PDFGenerator() {
   const previewRef = useRef<HTMLDivElement | null>(null)
 
   const handleGeneratePDF = async () => {
-    // const element = document.getElementById('pdfCode');
-    // const opt = {
-    //   margin: 10,
-    //   filename: 'assignment.pdf',
-    // }
-    // html2pdf(element, opt);
+    const input = previewRef.current;
+    if (!input) return;
 
+    // Use html2canvas to capture the preview section
+    const canvas = await html2canvas(input, {
+      scale: 2,
+      useCORS: true,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height
+
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "px",
+      format: [imgWidth, imgHeight]
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("assignment.pdf");
+  };
+
+  const handleGeneratePNG = async () => {
     const canvas = await html2canvas(previewRef.current as HTMLElement);
     const imgData = canvas.toDataURL('image/png');
     const link = document.createElement('a');
@@ -159,8 +179,9 @@ export default function PDFGenerator() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="gap-4">
               <Button onClick={handleGeneratePDF}>Generate PDF</Button>
+              <Button onClick={handleGeneratePNG}>Generate PNG</Button>
             </CardFooter>
           </Card>
         </div>

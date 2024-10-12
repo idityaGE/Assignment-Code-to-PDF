@@ -34,8 +34,8 @@ export const PreviewSection = ({ code, question, output, language, style, wrapCo
           </div>
         </div>
         <div>
-          <h3 className="font-bold">Output:</h3>
-          <pre className="overflow-y-auto">{output}</pre>
+          <h3 className="font-bold mb-3">Output:</h3>
+          <pre className="overflow-y-auto rounded-md bg-[#232323] text-white p-4">{output}</pre>
         </div>
       </div>
     </CardContent>
