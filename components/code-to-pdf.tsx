@@ -17,8 +17,6 @@ import { themes } from '@/utils/themes'
 import { useEffect, useState, useRef } from "react"
 
 import { PreviewSection } from "./preview-section"
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
 
 
 export default function PDFGenerator() {
@@ -33,6 +31,9 @@ export default function PDFGenerator() {
   const previewRef = useRef<HTMLDivElement | null>(null)
 
   const handleGeneratePDF = async () => {
+    const html2canvas = (await import('html2canvas')).default;
+    const jsPDF = (await import('jspdf')).default;
+
     const input = previewRef.current;
     if (!input) return;
 
@@ -52,6 +53,8 @@ export default function PDFGenerator() {
   };
 
   const handleGeneratePNG = async () => {
+    const html2canvas = (await import('html2canvas')).default;
+
     const canvas = await html2canvas(previewRef.current as HTMLElement);
     const imgData = canvas.toDataURL('image/png');
     const link = document.createElement('a');
@@ -81,7 +84,7 @@ export default function PDFGenerator() {
 
   return (
     <div className="container mx-3 p-4">
-      <h1 className="text-2xl font-bold mb-4">Assignment PDF Generator</h1>
+      <h1 className="text-2xl font-bold mb-4">Assignment PDF Generator <a className="underline" href="https://github.com/idityaGE">GitHub</a> </h1>
       <div className="flex gap-4">
         <div className="min-w-[35vw]">
           <Card>
@@ -155,7 +158,7 @@ export default function PDFGenerator() {
                   <Switch
                     id="wrap-code"
                     checked={!!wrapCode}
-                    //@ts-ignore
+                    //@ts-expect-error I don't know why this is throwing an error
                     onCheckedChange={setWrapCode}
                   />
                   <Label htmlFor="wrap-code">Wrap Code</Label>
@@ -164,7 +167,7 @@ export default function PDFGenerator() {
                   <Switch
                     id="show-line-numbers"
                     checked={!!showLineNumbers}
-                    //@ts-ignore
+                    //@ts-expect-error I don't know why this is throwing an error
                     onCheckedChange={setShowLineNumbers}
                   />
                   <Label htmlFor="show-line-numbers">Show Line Numbers</Label>

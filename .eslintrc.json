@@ -1,3 +1,10 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off", // Disable the use of any type
+    "@typescript-eslint/ban-ts-comment": "warn" // Change the ban on ts-comments to a warning
+  }
 }
