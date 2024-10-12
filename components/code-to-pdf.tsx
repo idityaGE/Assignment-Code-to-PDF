@@ -14,6 +14,7 @@ import { languages } from '@/utils/languages'
 import { themes } from '@/utils/themes'
 import { PreviewSection } from "./preview-section"
 import { IntialCode, IntialOutput, IntialQuestion } from '@/lib/intialtext'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 interface Question {
   id: string
@@ -74,11 +75,24 @@ export default function PDFGenerator() {
 
     const pdf = new jsPDF("portrait", "px", "a4")
 
+    // Expand all preview accordions before generating PDF
+    const previewAccordions = previewRef.current?.querySelectorAll('[data-state="closed"]')
+    previewAccordions?.forEach((accordion) => {
+      (accordion as HTMLElement).click()
+    })
+
+    // Wait for accordions to expand
+    await new Promise(resolve => setTimeout(resolve, 500))
+
     for (let i = 0; i < questions.length; i++) {
       const input = document.getElementById(`preview-${questions[i].id}`)
       if (!input) continue
 
-      const canvas = await html2canvas(input)
+      const canvas = await html2canvas(input, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      })
       const imgData = canvas.toDataURL("image/png")
 
       if (i > 0) pdf.addPage()
@@ -95,120 +109,136 @@ export default function PDFGenerator() {
     }
 
     pdf.save("assignment.pdf")
+
+    // Close all preview accordions after generating PDF
+    previewAccordions?.forEach((accordion) => {
+      (accordion as HTMLElement).click()
+    })
   }
 
   return (
     <div className="container mx-3 p-4">
       <h1 className="text-2xl font-bold mb-4">Assignment PDF Generator <a className="underline" target="_blank" href="https://github.com/idityaGE">GitHub</a></h1>
       <div className="flex-1 gap-4 md:flex">
-        <div className="min-w-[35vw]">
-          <Card>
-            <CardHeader>
-              <CardTitle>Input</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="questions">
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                      {questions.map((q, index) => (
-                        <Draggable key={q.id} draggableId={q.id} index={index}>
-                          {(provided) => (
-                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mb-4 p-4 border rounded">
-                              <div className="space-y-4">
-                                <div>
-                                  <Label htmlFor={`question-${q.id}`}>Question</Label>
-                                  <Textarea
-                                    id={`question-${q.id}`}
-                                    placeholder="Enter the question here"
-                                    value={q.question}
-                                    onChange={(e) => handleUpdateQuestion(q.id, 'question', e.target.value)}
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor={`code-${q.id}`}>Code</Label>
-                                  <Textarea
-                                    id={`code-${q.id}`}
-                                    placeholder="Enter your code here"
-                                    value={q.code}
-                                    onChange={(e) => handleUpdateQuestion(q.id, 'code', e.target.value)}
-                                    rows={10}
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor={`output-${q.id}`}>Output</Label>
-                                  <Textarea
-                                    id={`output-${q.id}`}
-                                    placeholder="Enter the output here"
-                                    value={q.output}
-                                    onChange={(e) => handleUpdateQuestion(q.id, 'output', e.target.value)}
-                                    rows={7}
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor={`language-${q.id}`}>Language</Label>
-                                  <Select value={q.language} onValueChange={(value) => handleUpdateQuestion(q.id, 'language', value)}>
-                                    <SelectTrigger id={`language-${q.id}`}>
-                                      <SelectValue placeholder="Select Language" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {languages.map((lang) => (
-                                        <SelectItem key={lang.value} value={lang.value}>
-                                          {lang.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                <Button onClick={() => handleDeleteQuestion(q.id)} variant="destructive">Delete Question</Button>
-                              </div>
-                            </div>
-                          )}
-                        </Draggable>
+        <ScrollArea className="h-[90vh] min-w-[35vw]">
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Input</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DragDropContext onDragEnd={onDragEnd}>
+                  <Droppable droppableId="questions">
+                    {(provided) => (
+                      <div {...provided.droppableProps} ref={provided.innerRef}>
+                        <Accordion type="multiple" className="w-full">
+                          {questions.map((q, index) => (
+                            <Draggable key={q.id} draggableId={q.id} index={index}>
+                              {(provided) => (
+                                <AccordionItem value={q.id}>
+                                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mb-4 border rounded">
+                                    <AccordionTrigger className="px-4 py-2 hover:no-underline">
+                                      Question {index + 1}
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                      <div className="space-y-4 p-4">
+                                        <div>
+                                          <Label htmlFor={`question-${q.id}`}>Question</Label>
+                                          <Textarea
+                                            id={`question-${q.id}`}
+                                            placeholder="Enter the question here"
+                                            value={q.question}
+                                            onChange={(e) => handleUpdateQuestion(q.id, 'question', e.target.value)}
+                                          />
+                                        </div>
+                                        <div>
+                                          <Label htmlFor={`code-${q.id}`}>Code</Label>
+                                          <Textarea
+                                            id={`code-${q.id}`}
+                                            placeholder="Enter your code here"
+                                            value={q.code}
+                                            onChange={(e) => handleUpdateQuestion(q.id, 'code', e.target.value)}
+                                            rows={10}
+                                          />
+                                        </div>
+                                        <div>
+                                          <Label htmlFor={`output-${q.id}`}>Output</Label>
+                                          <Textarea
+                                            id={`output-${q.id}`}
+                                            placeholder="Enter the output here"
+                                            value={q.output}
+                                            onChange={(e) => handleUpdateQuestion(q.id, 'output', e.target.value)}
+                                            rows={7}
+                                          />
+                                        </div>
+                                        <div>
+                                          <Label htmlFor={`language-${q.id}`}>Language</Label>
+                                          <Select value={q.language} onValueChange={(value) => handleUpdateQuestion(q.id, 'language', value)}>
+                                            <SelectTrigger id={`language-${q.id}`}>
+                                              <SelectValue placeholder="Select Language" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {languages.map((lang) => (
+                                                <SelectItem key={lang.value} value={lang.value}>
+                                                  {lang.label}
+                                                </SelectItem>
+                                              ))}
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                        <Button onClick={() => handleDeleteQuestion(q.id)} variant="destructive">Delete Question</Button>
+                                      </div>
+                                    </AccordionContent>
+                                  </div>
+                                </AccordionItem>
+                              )}
+                            </Draggable>
+                          ))}
+                        </Accordion>
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+                <Button onClick={handleAddQuestion} className="mt-4">Add Question</Button>
+              </CardContent>
+              <CardFooter className="flex-col items-start gap-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="wrap-code"
+                    checked={wrapCode}
+                    onCheckedChange={setWrapCode}
+                  />
+                  <Label htmlFor="wrap-code">Wrap Code</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="show-line-numbers"
+                    checked={showLineNumbers}
+                    onCheckedChange={setShowLineNumbers}
+                  />
+                  <Label htmlFor="show-line-numbers">Show Line Numbers</Label>
+                </div>
+                <div className="w-full">
+                  <Label htmlFor="theme">Theme</Label>
+                  <Select value={theme} onValueChange={setTheme}>
+                    <SelectTrigger id="theme">
+                      <SelectValue placeholder="Select Theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {themes.map((t) => (
+                        <SelectItem key={t.value} value={t.value}>
+                          {t.label}
+                        </SelectItem>
                       ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
-              <Button onClick={handleAddQuestion} className="mt-4">Add Question</Button>
-            </CardContent>
-            <CardFooter className="flex-col items-start gap-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="wrap-code"
-                  checked={wrapCode}
-                  onCheckedChange={setWrapCode}
-                />
-                <Label htmlFor="wrap-code">Wrap Code</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="show-line-numbers"
-                  checked={showLineNumbers}
-                  onCheckedChange={setShowLineNumbers}
-                />
-                <Label htmlFor="show-line-numbers">Show Line Numbers</Label>
-              </div>
-              <div className="w-full">
-                <Label htmlFor="theme">Theme</Label>
-                <Select value={theme} onValueChange={setTheme}>
-                  <SelectTrigger id="theme">
-                    <SelectValue placeholder="Select Theme" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {themes.map((t) => (
-                      <SelectItem key={t.value} value={t.value}>
-                        {t.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button onClick={handleGeneratePDF} className="w-full">Generate PDF</Button>
-            </CardFooter>
-          </Card>
-        </div>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={handleGeneratePDF} className="w-full">Generate PDF</Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </ScrollArea>
         <ScrollArea className="h-[90vh] min-w-[60vw]">
           <div>
             <Card>
@@ -216,7 +246,7 @@ export default function PDFGenerator() {
                 <CardTitle>Preview</CardTitle>
               </CardHeader>
               <div ref={previewRef}>
-                {questions.map((q) => (
+                {questions.map((q, index) => (
                   <div key={q.id} id={`preview-${q.id}`}>
                     <PreviewSection
                       code={q.code}
@@ -226,6 +256,7 @@ export default function PDFGenerator() {
                       theme={theme}
                       wrapCode={wrapCode}
                       showLineNumbers={showLineNumbers}
+                      questionNumber={index + 1}
                     />
                   </div>
                 ))}

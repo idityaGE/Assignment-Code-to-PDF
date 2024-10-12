@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import { CardContent } from "@/components/ui/card"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 interface PreviewSectionProps {
   code: string
@@ -11,9 +12,10 @@ interface PreviewSectionProps {
   theme: string
   wrapCode: boolean
   showLineNumbers: boolean
+  questionNumber: number
 }
 
-export const PreviewSection = ({ code, question, output, language, theme, wrapCode, showLineNumbers }: PreviewSectionProps) => {
+export const PreviewSection = ({ code, question, output, language, theme, wrapCode, showLineNumbers, questionNumber }: PreviewSectionProps) => {
   const [style, setStyle] = useState<any>(a11yDark)
 
   useEffect(() => {
@@ -31,30 +33,39 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
 
   return (
     <CardContent>
-      <div className="space-y-4">
-        <div>
-          <h3 className="font-bold">Question:</h3>
-          <p>{question}</p>
-        </div>
-        <div>
-          <h3 className="font-bold mb-3">Code:</h3>
-          <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
-            <SyntaxHighlighter
-              language={language}
-              style={style}
-              wrapLongLines={wrapCode}
-              showLineNumbers={showLineNumbers}
-              PreTag="div"
-            >
-              {code}
-            </SyntaxHighlighter>
-          </div>
-        </div>
-        <div>
-          <h3 className="font-bold mb-3">Output:</h3>
-          <pre className="overflow-y-auto rounded-md bg-[#232323] text-white p-4">{output}</pre>
-        </div>
-      </div>
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value={`question-${questionNumber}`}>
+          <AccordionTrigger className="text-lg font-semibold">
+            Question {questionNumber}
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-bold">Question:</h3>
+                <p>{question}</p>
+              </div>
+              <div>
+                <h3 className="font-bold mb-3">Code:</h3>
+                <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
+                  <SyntaxHighlighter
+                    language={language}
+                    style={style}
+                    wrapLongLines={wrapCode}
+                    showLineNumbers={showLineNumbers}
+                    PreTag="div"
+                  >
+                    {code}
+                  </SyntaxHighlighter>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold mb-3">Output:</h3>
+                <pre className="overflow-y-auto rounded-md bg-[#232323] text-white p-4">{output}</pre>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </CardContent>
   )
 }
