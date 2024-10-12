@@ -99,15 +99,13 @@ export default function PDFGenerator() {
       const imgHeight = canvas.height
 
       if (!pdf) {
-        pdf = new jsPDF("portrait", "px", [imgWidth, imgHeight], true)
+        pdf = new jsPDF("portrait", "px", [imgWidth + 160, imgHeight + 160], true)
       } else {
-        pdf.addPage("portrait", "px", [imgWidth, imgHeight], true)
+        pdf.addPage("portrait", "px", [imgWidth + 160, imgHeight + 160], true)
       }
 
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
 
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight)
+      pdf.addImage(imgData, "PNG", 80, 80, imgWidth, imgHeight)
     }
 
     pdf.save("assignment.pdf")
