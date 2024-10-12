@@ -115,18 +115,6 @@ export default function PDFGenerator() {
     })
   }
 
-  const handleGeneratePNG = async () => {
-    const html2canvas = (await import('html2canvas')).default
-    const canvas = await html2canvas(previewRef.current as HTMLElement)
-    const imgData = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = imgData;
-    link.download = 'captured-image.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
 
   return (
     <div className="container mx-3 p-4">
