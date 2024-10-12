@@ -21,7 +21,7 @@ export const PreviewSection = ({ code, question, output, language, style, wrapCo
           <p>{question}</p>
         </div>
         <div>
-          <h3 className="font-bold">Code:</h3>
+          <h3 className="font-bold mb-3">Code:</h3>
           <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
             <SyntaxHighlighter
               language={language}

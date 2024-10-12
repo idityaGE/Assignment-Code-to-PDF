@@ -17,9 +17,8 @@ import { themes } from '@/utils/themes'
 import { useEffect, useState, useRef } from "react"
 
 import { PreviewSection } from "./preview-section"
-
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import html2pdf from 'html2pdf.js'
+import html2canvas from 'html2canvas'
 
 
 export default function PDFGenerator() {
@@ -34,19 +33,21 @@ export default function PDFGenerator() {
   const previewRef = useRef<HTMLDivElement | null>(null)
 
   const handleGeneratePDF = async () => {
-    const input = previewRef.current;
-    if (!input) return;
+    // const element = document.getElementById('pdfCode');
+    // const opt = {
+    //   margin: 10,
+    //   filename: 'assignment.pdf',
+    // }
+    // html2pdf(element, opt);
 
-    const canvas = await html2canvas(input);
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("assignment.pdf");
+    const canvas = await html2canvas(previewRef.current as HTMLElement);
+    const imgData = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = imgData;
+    link.download = 'captured-image.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const [style, setStyle] = useState(a11yDark || null);
@@ -67,10 +68,10 @@ export default function PDFGenerator() {
   }, [theme]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-3 p-4">
       <h1 className="text-2xl font-bold mb-4">Assignment PDF Generator</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+      <div className="flex gap-4">
+        <div className="min-w-[35vw]">
           <Card>
             <CardHeader>
               <CardTitle>Input</CardTitle>
@@ -163,13 +164,13 @@ export default function PDFGenerator() {
             </CardFooter>
           </Card>
         </div>
-        <ScrollArea className="h-[90vh]">
+        <ScrollArea className="h-[90vh] min-w-[60vw]">
           <div>
             <Card>
               <CardHeader>
                 <CardTitle>Preview</CardTitle>
               </CardHeader>
-              <div ref={previewRef}>
+              <div ref={previewRef} id="pdfCode">
                 <PreviewSection
                   code={code}
                   question={question}
