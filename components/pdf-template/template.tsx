@@ -7,7 +7,8 @@ type CodeToPDFProps = {
   output: string
   language?: string
   theme?: string
-  wrapCode?: boolean | undefined
+  wrapCode?: string
+  showLineNumbers?: string
 }
 
 export const generatePDF = async ({
@@ -17,6 +18,7 @@ export const generatePDF = async ({
   language,
   theme,
   wrapCode,
+  showLineNumbers
 }: CodeToPDFProps) => {
   const MyDocument = (
     <Document>

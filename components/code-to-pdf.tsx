@@ -19,17 +19,17 @@ import { themes } from '@/utils/themes'
 import { useEffect, useState } from "react"
 
 
-
 export default function PDFGenerator() {
   const [question, setQuestion] = useLocalStorage('pdfGenerator_question', '');
   const [code, setCode] = useLocalStorage('pdfGenerator_code', '');
   const [output, setOutput] = useLocalStorage('pdfGenerator_output', '');
   const [language, setLanguage] = useLocalStorage('pdfGenerator_language', 'javascript');
   const [theme, setTheme] = useLocalStorage('pdfGenerator_theme', 'docco');
-  const [wrapCode, setWrapCode] = useLocalStorage('pdfGenerator_wrapCode', false);
+  const [wrapCode, setWrapCode] = useLocalStorage('pdfGenerator_wrapCode', "true");
+  const [showLineNumbers, setShowLineNumbers] = useLocalStorage('pdfGenerator_showLineNumbers', "true");
 
   const handleGeneratePDF = () => {
-    generatePDF({ question, code, output, language, theme, wrapCode });
+    generatePDF({ question, code, output, language, theme, wrapCode, showLineNumbers });
   };
 
   const [style, setStyle] = useState(a11yDark || null);
@@ -46,7 +46,6 @@ export default function PDFGenerator() {
         setStyle(a11yDark);
       }
     }
-
     loadStyle();
   }, [theme]);
 
@@ -77,7 +76,7 @@ export default function PDFGenerator() {
                     placeholder="Enter your code here"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    rows={15}
+                    rows={10}
                   />
                 </div>
                 <div>
@@ -87,7 +86,7 @@ export default function PDFGenerator() {
                     placeholder="Enter the output here"
                     value={output}
                     onChange={(e) => setOutput(e.target.value)}
-                    rows={8}
+                    rows={7}
                   />
                 </div>
                 <div className="flex space-x-4">
@@ -125,10 +124,20 @@ export default function PDFGenerator() {
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="wrap-code"
-                    checked={wrapCode}
+                    checked={!!wrapCode}
+                    //@ts-ignore
                     onCheckedChange={setWrapCode}
                   />
                   <Label htmlFor="wrap-code">Wrap Code</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="show-line-numbers"
+                    checked={!!showLineNumbers}
+                    //@ts-ignore
+                    onCheckedChange={setShowLineNumbers}
+                  />
+                  <Label htmlFor="show-line-numbers">Show Line Numbers</Label>
                 </div>
               </div>
             </CardContent>
@@ -155,8 +164,8 @@ export default function PDFGenerator() {
                       <SyntaxHighlighter
                         language={language}
                         style={style}
-                        wrapLongLines={true}
-                        showLineNumbers={true}
+                        wrapLongLines={!!wrapCode}
+                        showLineNumbers={!!showLineNumbers}
                       >
                         {code}
                       </SyntaxHighlighter>
