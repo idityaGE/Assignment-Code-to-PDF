@@ -1,14 +1,12 @@
+
 import { Font, StyleSheet } from '@react-pdf/renderer'
 
+// Register a custom font for PDF generation
 Font.register({
   family: 'Roboto',
   src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf',
 })
 
-Font.register({
-  family: 'JetBrainsMono',
-  src: 'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/JetBrainsMono-Regular.woff2',
-})
 
 export const styles = StyleSheet.create({
   page: {
@@ -32,14 +30,14 @@ export const styles = StyleSheet.create({
     fontFamily: 'Roboto',
   },
   code: {
-    fontFamily: 'RobotoMono',
+    fontFamily: 'Roboto',
     fontSize: 10,
     marginBottom: 10,
     padding: 10,
     backgroundColor: '#f0f0f0',
   },
   codeLine: {
-    fontFamily: 'RobotoMono',
+    fontFamily: 'Roboto',
     fontSize: 10,
   },
 })

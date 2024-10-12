@@ -8,7 +8,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { generatePDF } from './pdf-template/template'
@@ -17,6 +16,8 @@ import { useLocalStorage } from '@/hook/useLocalStorage'
 import { languages } from '@/utils/languages'
 import { themes } from '@/utils/themes'
 import { useEffect, useState } from "react"
+
+import { PreviewSection } from "./preview-section"
 
 
 export default function PDFGenerator() {
@@ -152,31 +153,15 @@ export default function PDFGenerator() {
               <CardHeader>
                 <CardTitle>Preview</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-bold">Question:</h3>
-                    <p>{question}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-bold">Code:</h3>
-                    <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
-                      <SyntaxHighlighter
-                        language={language}
-                        style={style}
-                        wrapLongLines={!!wrapCode}
-                        showLineNumbers={!!showLineNumbers}
-                      >
-                        {code}
-                      </SyntaxHighlighter>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-bold">Output:</h3>
-                    <pre className="overflow-y-auto">{output}</pre>
-                  </div>
-                </div>
-              </CardContent>
+              <PreviewSection
+                code={code}
+                question={question}
+                output={output}
+                language={language}
+                style={style}
+                wrapCode={wrapCode}
+                showLineNumbers={showLineNumbers}
+              />
             </Card>
           </div>
         </ScrollArea>
