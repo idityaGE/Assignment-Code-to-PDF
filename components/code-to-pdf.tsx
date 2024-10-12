@@ -77,47 +77,57 @@ export default function PDFGenerator() {
     const html2canvas = (await import('html2canvas')).default
     const jsPDF = (await import('jspdf')).default
 
-    // Expand all accordions before generating PDF
-    const accordions = document.querySelectorAll('[data-state="closed"]')
-    accordions.forEach((accordion) => {
+
+    const previewAccordions = previewRef.current?.querySelectorAll('[data-state="closed"]')
+    previewAccordions?.forEach((accordion) => {
       (accordion as HTMLElement).click()
     })
 
-    // Wait for accordions to expand
-    await new Promise(resolve => setTimeout(resolve, 800))
+    await new Promise(resolve => setTimeout(resolve, 500))
 
-    let pdf = null // Declare pdf variable here
+    let pdf: any = null
+
     for (let i = 0; i < questions.length; i++) {
-      const input = document.getElementById(`preview-${questions[i].id}`)
-      if (!input) continue
+      const questionId = questions[i].id;
+      const questionElement = document.querySelector(`#preview-${questionId} .space-y-4`);
+      if (!questionElement) continue;
 
-      const canvas = await html2canvas(input)
+
+      const canvas = await html2canvas(questionElement as HTMLElement)
       const imgData = canvas.toDataURL("image/png")
-
       const imgWidth = canvas.width
       const imgHeight = canvas.height
 
-      // Create jsPDF instance only for the first iteration using the first image's dimensions
       if (!pdf) {
         pdf = new jsPDF("portrait", "px", [imgWidth, imgHeight], true)
       } else {
-        pdf.addPage([imgWidth, imgHeight]) // Add a new page with dimensions
+        pdf.addPage("portrait", "px", [imgWidth, imgHeight], true)
       }
 
       const pdfWidth = pdf.internal.pageSize.getWidth()
       const pdfHeight = pdf.internal.pageSize.getHeight()
-      pdf.addImage(imgData, "PNG", 0, 3, pdfWidth, pdfHeight, undefined, 'FAST')
+
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight)
     }
 
-    if (pdf) {
-      pdf.save("assignment.pdf")
-    }
+    pdf.save("assignment.pdf")
 
-    // Close all accordions after generating PDF
-    accordions.forEach((accordion) => {
+    previewAccordions?.forEach((accordion) => {
       (accordion as HTMLElement).click()
     })
   }
+
+  const handleGeneratePNG = async () => {
+    const html2canvas = (await import('html2canvas')).default
+    const canvas = await html2canvas(previewRef.current as HTMLElement)
+    const imgData = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = imgData;
+    link.download = 'captured-image.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
 
   return (
@@ -246,6 +256,7 @@ export default function PDFGenerator() {
                   </Select>
                 </div>
                 <Button onClick={handleGeneratePDF} className="w-full">Generate PDF</Button>
+                {/* <Button onClick={handleGeneratePNG} className="w-full">Generate PNG</Button> */}
               </CardFooter>
             </Card>
           </div>
