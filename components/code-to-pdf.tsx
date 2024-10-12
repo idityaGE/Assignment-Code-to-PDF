@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -73,48 +73,48 @@ export default function PDFGenerator() {
     const html2canvas = (await import('html2canvas')).default
     const jsPDF = (await import('jspdf')).default
 
-    const pdf = new jsPDF("portrait", "px", "a4")
-
-    // Expand all preview accordions before generating PDF
-    const previewAccordions = previewRef.current?.querySelectorAll('[data-state="closed"]')
-    previewAccordions?.forEach((accordion) => {
+    // Expand all accordions before generating PDF
+    const accordions = document.querySelectorAll('[data-state="closed"]')
+    accordions.forEach((accordion) => {
       (accordion as HTMLElement).click()
     })
 
     // Wait for accordions to expand
     await new Promise(resolve => setTimeout(resolve, 500))
 
+    let pdf = null // Declare pdf variable here
     for (let i = 0; i < questions.length; i++) {
       const input = document.getElementById(`preview-${questions[i].id}`)
       if (!input) continue
 
-      const canvas = await html2canvas(input, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      })
+      const canvas = await html2canvas(input)
       const imgData = canvas.toDataURL("image/png")
 
-      if (i > 0) pdf.addPage()
+      const imgWidth = canvas.width
+      const imgHeight = canvas.height
+
+      // Create jsPDF instance only for the first iteration using the first image's dimensions
+      if (!pdf) {
+        pdf = new jsPDF("portrait", "px", [imgWidth, imgHeight], true)
+      } else {
+        pdf.addPage([imgWidth, imgHeight]) // Add a new page with dimensions
+      }
 
       const pdfWidth = pdf.internal.pageSize.getWidth()
       const pdfHeight = pdf.internal.pageSize.getHeight()
-      const imgWidth = canvas.width
-      const imgHeight = canvas.height
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
-      const imgX = (pdfWidth - imgWidth * ratio) / 2
-      const imgY = 30
-
-      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio)
+      pdf.addImage(imgData, "PNG", 0, 3, pdfWidth, pdfHeight, undefined, 'FAST')
     }
 
-    pdf.save("assignment.pdf")
+    if (pdf) {
+      pdf.save("assignment.pdf")
+    }
 
-    // Close all preview accordions after generating PDF
-    previewAccordions?.forEach((accordion) => {
+    // Close all accordions after generating PDF
+    accordions.forEach((accordion) => {
       (accordion as HTMLElement).click()
     })
   }
+
 
   return (
     <div className="container mx-3 p-4">
