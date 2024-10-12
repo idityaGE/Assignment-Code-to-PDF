@@ -8,8 +8,8 @@ interface PreviewSectionProps {
   output: string
   language?: string
   style?: any
-  wrapCode?: string
-  showLineNumbers?: string
+  wrapCode?: boolean
+  showLineNumbers?: boolean
 }
 
 export const PreviewSection = ({ code, question, output, language, style, wrapCode, showLineNumbers }: PreviewSectionProps) => {
@@ -26,8 +26,8 @@ export const PreviewSection = ({ code, question, output, language, style, wrapCo
             <SyntaxHighlighter
               language={language}
               style={style}
-              wrapLongLines={!!wrapCode}
-              showLineNumbers={!!showLineNumbers}
+              wrapLongLines={wrapCode}
+              showLineNumbers={showLineNumbers}
             >
               {code}
             </SyntaxHighlighter>

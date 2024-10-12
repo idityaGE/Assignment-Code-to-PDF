@@ -18,15 +18,17 @@ import { useEffect, useState, useRef } from "react"
 
 import { PreviewSection } from "./preview-section"
 
+import { IntialCode, IntialOutput, IntialQuestion } from '@/lib/intialtext'
+
 
 export default function PDFGenerator() {
-  const [question, setQuestion] = useLocalStorage('pdfGenerator_question', '');
-  const [code, setCode] = useLocalStorage('pdfGenerator_code', '');
-  const [output, setOutput] = useLocalStorage('pdfGenerator_output', '');
-  const [language, setLanguage] = useLocalStorage('pdfGenerator_language', 'javascript');
-  const [theme, setTheme] = useLocalStorage('pdfGenerator_theme', 'docco');
-  const [wrapCode, setWrapCode] = useLocalStorage('pdfGenerator_wrapCode', "true");
-  const [showLineNumbers, setShowLineNumbers] = useLocalStorage('pdfGenerator_showLineNumbers', "true");
+  const [question, setQuestion] = useLocalStorage('pdfGenerator_question', IntialQuestion);
+  const [code, setCode] = useLocalStorage('pdfGenerator_code', IntialCode);
+  const [output, setOutput] = useLocalStorage('pdfGenerator_output', IntialOutput);
+  const [language, setLanguage] = useLocalStorage('pdfGenerator_language', 'cpp');
+  const [theme, setTheme] = useLocalStorage('pdfGenerator_theme', 'a11y-dark');
+  const [wrapCode, setWrapCode] = useState<boolean>(true);
+  const [showLineNumbers, setShowLineNumbers] = useState<boolean>(true);
 
   const previewRef = useRef<HTMLDivElement | null>(null)
 
@@ -84,8 +86,8 @@ export default function PDFGenerator() {
 
   return (
     <div className="container mx-3 p-4">
-      <h1 className="text-2xl font-bold mb-4">Assignment PDF Generator <a className="underline" href="https://github.com/idityaGE">GitHub</a> </h1>
-      <div className="flex gap-4">
+      <h1 className="text-2xl font-bold mb-4">Assignment PDF Generator <a className="underline" target="_blank" href="https://github.com/idityaGE">GitHub</a> </h1>
+      <div className="flex-1 gap-4 md:flex">
         <div className="min-w-[35vw]">
           <Card>
             <CardHeader>
@@ -157,8 +159,7 @@ export default function PDFGenerator() {
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="wrap-code"
-                    checked={!!wrapCode}
-                    //@ts-expect-error I don't know why this is throwing an error
+                    checked={wrapCode}
                     onCheckedChange={setWrapCode}
                   />
                   <Label htmlFor="wrap-code">Wrap Code</Label>
@@ -166,8 +167,7 @@ export default function PDFGenerator() {
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="show-line-numbers"
-                    checked={!!showLineNumbers}
-                    //@ts-expect-error I don't know why this is throwing an error
+                    checked={showLineNumbers}
                     onCheckedChange={setShowLineNumbers}
                   />
                   <Label htmlFor="show-line-numbers">Show Line Numbers</Label>
