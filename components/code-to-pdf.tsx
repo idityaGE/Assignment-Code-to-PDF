@@ -36,21 +36,13 @@ export default function PDFGenerator() {
     const input = previewRef.current;
     if (!input) return;
 
-    // Use html2canvas to capture the preview section
-    const canvas = await html2canvas(input, {
-      scale: 2,
-      useCORS: true,
-    });
+    const canvas = await html2canvas(input);
 
     const imgData = canvas.toDataURL("image/png");
     const imgWidth = canvas.width;
     const imgHeight = canvas.height
 
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "px",
-      format: [imgWidth, imgHeight]
-    });
+    const pdf = new jsPDF("portrait", "px", [imgWidth, imgHeight], true);
 
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
