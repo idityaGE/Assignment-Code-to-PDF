@@ -20,6 +20,8 @@ import { IntialCode, IntialOutput, IntialQuestion } from '@/utils/intialtext'
 import { Question } from "@/utils/types"
 
 import { PreviewSection } from "./preview-section"
+import { GitHubLogoIcon } from "@radix-ui/react-icons"
+import { Asterisk } from "lucide-react"
 
 
 
@@ -34,7 +36,7 @@ export default function PDFGenerator() {
     }
   ])
   const [theme, setTheme] = useLocalStorage('pdfGenerator_theme', 'a11y-dark')
-  
+
   const [wrapCode, setWrapCode] = useState<boolean>(true)
   const [showLineNumbers, setShowLineNumbers] = useState<boolean>(true)
 
@@ -120,13 +122,17 @@ export default function PDFGenerator() {
 
   return (
     <div className="container mx-3 p-4">
-      <h1 className="text-2xl font-bold mb-4">Assignment PDF Generator <a className="underline" target="_blank" href="https://github.com/idityaGE">GitHub</a></h1>
+      <nav className="flex items-center justify-between w-full mb-4">
+        <h1 className="text-3xl font-bold ">Assignment PDF Generator </h1>
+        <kbd className="flex"><Asterisk className="pb-2" /> Only optimized for the large devices like Laptop and Desktop.</kbd>
+        <a className="underline" target="_blank" href="https://github.com/idityaGE/Assignment-Code-to-PDF"><GitHubLogoIcon className="h-10 w-10" /></a>
+      </nav>
       <div className="flex-1 gap-4 md:flex">
         <ScrollArea className="h-[90vh] min-w-[35vw]">
           <div>
             <Card>
               <CardHeader>
-                <CardTitle>Input</CardTitle>
+                <CardTitle className="text-2xl">Input</CardTitle>
               </CardHeader>
               <CardContent>
                 <DragDropContext onDragEnd={onDragEnd}>
@@ -138,15 +144,16 @@ export default function PDFGenerator() {
                             <Draggable key={q.id} draggableId={q.id} index={index}>
                               {(provided) => (
                                 <AccordionItem value={q.id}>
-                                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mb-4 border rounded">
-                                    <AccordionTrigger className="px-4 py-2 hover:no-underline">
+                                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mb-4 border rounded bg-slate-200">
+                                    <AccordionTrigger className="px-4 py-2 text-lg font-semibold">
                                       Question {index + 1}
                                     </AccordionTrigger>
                                     <AccordionContent>
                                       <div className="space-y-4 p-4">
                                         <div>
-                                          <Label htmlFor={`question-${q.id}`}>Question</Label>
+                                          <Label htmlFor={`question-${q.id}`} className="font-semibold">Question</Label>
                                           <Textarea
+                                            className="bg-white"
                                             id={`question-${q.id}`}
                                             placeholder="Enter the question here"
                                             value={q.question}
@@ -154,8 +161,9 @@ export default function PDFGenerator() {
                                           />
                                         </div>
                                         <div>
-                                          <Label htmlFor={`code-${q.id}`}>Code</Label>
+                                          <Label htmlFor={`code-${q.id}`} className="font-semibold">Code</Label>
                                           <Textarea
+                                            className="bg-white"
                                             id={`code-${q.id}`}
                                             placeholder="Enter your code here"
                                             value={q.code}
@@ -164,8 +172,9 @@ export default function PDFGenerator() {
                                           />
                                         </div>
                                         <div>
-                                          <Label htmlFor={`output-${q.id}`}>Output</Label>
+                                          <Label htmlFor={`output-${q.id}`} className="font-semibold">Output</Label>
                                           <Textarea
+                                            className="bg-white"
                                             id={`output-${q.id}`}
                                             placeholder="Enter the output here"
                                             value={q.output}
@@ -174,9 +183,9 @@ export default function PDFGenerator() {
                                           />
                                         </div>
                                         <div>
-                                          <Label htmlFor={`language-${q.id}`}>Language</Label>
+                                          <Label htmlFor={`language-${q.id}`} className="font-semibold">Language</Label>
                                           <Select value={q.language} onValueChange={(value) => handleUpdateQuestion(q.id, 'language', value)}>
-                                            <SelectTrigger id={`language-${q.id}`}>
+                                            <SelectTrigger id={`language-${q.id}`} className="bg-white">
                                               <SelectValue placeholder="Select Language" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -211,7 +220,7 @@ export default function PDFGenerator() {
                     checked={wrapCode}
                     onCheckedChange={setWrapCode}
                   />
-                  <Label htmlFor="wrap-code">Wrap Code</Label>
+                  <Label htmlFor="wrap-code" className="font-semibold">Wrap Code</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Switch
@@ -219,10 +228,10 @@ export default function PDFGenerator() {
                     checked={showLineNumbers}
                     onCheckedChange={setShowLineNumbers}
                   />
-                  <Label htmlFor="show-line-numbers">Show Line Numbers</Label>
+                  <Label htmlFor="show-line-numbers" className="font-semibold">Show Line Numbers</Label>
                 </div>
                 <div className="w-full">
-                  <Label htmlFor="theme">Theme</Label>
+                  <Label htmlFor="theme" className="font-bold">Theme</Label>
                   <Select value={theme} onValueChange={setTheme}>
                     <SelectTrigger id="theme">
                       <SelectValue placeholder="Select Theme" />
@@ -245,7 +254,7 @@ export default function PDFGenerator() {
           <div>
             <Card>
               <CardHeader>
-                <CardTitle>Preview</CardTitle>
+                <CardTitle className="text-2xl">Preview</CardTitle>
               </CardHeader>
               <div ref={previewRef}>
                 {questions.map((q, index) => (
