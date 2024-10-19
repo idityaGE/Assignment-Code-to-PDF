@@ -217,7 +217,7 @@ export default function PDFGenerator() {
                     )}
                   </Droppable>
                 </DragDropContext>
-                <Button onClick={handleAddQuestion} className="mt-4" variant="secondary">Add Question</Button>
+                <Button onClick={handleAddQuestion} className="mt-4" >Add Question</Button>
               </CardContent>
               <CardFooter className="flex-col items-start gap-4">
                 <div className="flex items-center space-x-2">
@@ -251,7 +251,7 @@ export default function PDFGenerator() {
                     </SelectContent>
                   </Select>
                 </div>
-                <Button onClick={handleGeneratePDF} className="w-full" variant="secondary">Generate PDF</Button>
+                <Button onClick={handleGeneratePDF} className="w-full" >Generate PDF</Button>
                 {/* <Button onClick={handleGeneratePNG} className="w-full">Generate PNG</Button> */}
               </CardFooter>
             </Card>
