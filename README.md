@@ -68,8 +68,8 @@ Students, including myself and my batchmates, frequently face the challenge of s
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-username/pdf-generator.git
-   cd pdf-generator
+   git clone https://github.com/idityaGE/Assignment-Code-to-PDF.git
+   cd Assignment-Code-to-PDF
    ```
 
 2. **Install Dependencies**
