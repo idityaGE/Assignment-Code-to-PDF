@@ -20,8 +20,7 @@ import { IntialCode, IntialOutput, IntialQuestion } from '@/utils/intialtext'
 import { Question } from "@/utils/types"
 
 import { PreviewSection } from "./preview-section"
-import { GitHubLogoIcon } from "@radix-ui/react-icons"
-import { Asterisk } from "lucide-react"
+import { Nav } from "./nav/navbar"
 
 
 
@@ -128,11 +127,7 @@ export default function PDFGenerator() {
 
   return (
     <div className="container mx-3 p-4">
-      <nav className="flex items-center justify-between w-full mb-4">
-        <h1 className="text-3xl font-bold ">Assignment PDF Generator </h1>
-        <kbd className="flex"><Asterisk className="pb-2" /> Only optimized for the large devices like Laptop and Desktop.</kbd>
-        <a className="underline" target="_blank" href="https://github.com/idityaGE/Assignment-Code-to-PDF"><GitHubLogoIcon className="h-10 w-10" /></a>
-      </nav>
+      <Nav />
       <div className="flex-1 gap-4 md:flex">
         <ScrollArea className="h-[90vh] min-w-[35vw]">
           <div>
