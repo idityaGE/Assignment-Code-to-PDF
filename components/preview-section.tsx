@@ -31,11 +31,13 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4">
-              <div>
+
+              {question && <div>
                 <h3 className="font-bold">Question:</h3>
                 <p>{question}</p>
-              </div>
-              <div>
+              </div>}
+
+              {code && <div>
                 <h3 className="font-bold mb-3">Code:</h3>
                 <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
                   <SyntaxHighlighter
@@ -48,11 +50,13 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
                     {code}
                   </SyntaxHighlighter>
                 </div>
-              </div>
-              <div>
+              </div>}
+
+              {output && <div>
                 <h3 className="font-bold mb-3">Output:</h3>
                 <pre className="overflow-y-auto rounded-md bg-[#232323] text-white p-4">{output}</pre>
-              </div>
+              </div>}
+
             </div>
           </AccordionContent>
         </AccordionItem>
