@@ -159,7 +159,7 @@ export default function PDFGenerator() {
                                         <div>
                                           <Label htmlFor={`question-${q.id}`} className="font-semibold">Question</Label>
                                           <Textarea
-                                            className="bg-white"
+                                            // className="bg-white"
                                             id={`question-${q.id}`}
                                             placeholder="Enter the question here"
                                             value={q.question}
@@ -169,7 +169,7 @@ export default function PDFGenerator() {
                                         <div>
                                           <Label htmlFor={`code-${q.id}`} className="font-semibold">Code</Label>
                                           <Textarea
-                                            className="bg-white"
+                                            // className="bg-white"
                                             id={`code-${q.id}`}
                                             placeholder="Enter your code here"
                                             value={q.code}
@@ -180,7 +180,7 @@ export default function PDFGenerator() {
                                         <div>
                                           <Label htmlFor={`output-${q.id}`} className="font-semibold">Output</Label>
                                           <Textarea
-                                            className="bg-white"
+                                            // className="bg-white"
                                             id={`output-${q.id}`}
                                             placeholder="Enter the output here"
                                             value={q.output}
@@ -191,7 +191,7 @@ export default function PDFGenerator() {
                                         <div>
                                           <Label htmlFor={`language-${q.id}`} className="font-semibold">Language</Label>
                                           <Select value={q.language} onValueChange={(value) => handleUpdateQuestion(q.id, 'language', value)}>
-                                            <SelectTrigger id={`language-${q.id}`} className="bg-white">
+                                            <SelectTrigger id={`language-${q.id}`}>
                                               <SelectValue placeholder="Select Language" />
                                             </SelectTrigger>
                                             <SelectContent>
