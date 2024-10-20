@@ -1,6 +1,5 @@
 import { Asterisk } from "lucide-react"
 import { GitHubLogoIcon } from "@radix-ui/react-icons"
-import { ModeToggle } from "../modeToggle"
 
 export function Nav() {
   return (
