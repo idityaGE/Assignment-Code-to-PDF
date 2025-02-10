@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Open_Sans } from "next/font/google";
+import { QuestionProvider } from "@/store/QuestionStore";
 
 
 const font = Open_Sans({ subsets: ["latin"] })
@@ -28,7 +29,9 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          {children}
+          <QuestionProvider>
+            {children}
+          </QuestionProvider>
         </ThemeProvider>
       </body>
     </html>

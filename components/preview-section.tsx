@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
@@ -26,15 +28,15 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
     <CardContent>
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value={`question-${questionNumber}`}>
-          <AccordionTrigger className="text-lg font-semibold">
+          <AccordionTrigger className="text-lg font-semibold rounded-2xl bg-[#232323] text-white p-4">
             Question {questionNumber}
           </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-4">
+            <div className="space-y-4 ml-4 mt-3">
 
               {question && <div>
                 <h3 className="font-bold">Question:</h3>
-                <p>{question}</p>
+                <p className='whitespace-pre-wrap'>{question}</p>
               </div>}
 
               {code && <div>
