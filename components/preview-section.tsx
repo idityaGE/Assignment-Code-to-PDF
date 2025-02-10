@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { PreviewSectionProps } from '@/utils/types'
 
 
-export const PreviewSection = ({ code, question, output, language, theme, wrapCode, showLineNumbers, questionNumber }: PreviewSectionProps) => {
+export const PreviewSection = ({ code, question, output, language, theme, wrapCode, showLineNumbers, questionNumber, questionId }: PreviewSectionProps) => {
   const [style, setStyle] = useState<any>(a11yDark)
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
 
               {code && <div>
                 <h3 className="font-bold mb-3">Code:</h3>
-                <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
+                <div className={`overflow-y-auto`} id={`code-image-${questionId}`}>
                   <SyntaxHighlighter
                     language={language}
                     style={style}
@@ -51,13 +51,6 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
                   >
                     {code}
                   </SyntaxHighlighter>
-
-                  {/* Hidden Div for Image Capture */}
-                  <div id={`code-image-${questionNumber}`} className="absolute -left-full">
-                    <SyntaxHighlighter language={language} style={style} wrapLongLines={wrapCode} showLineNumbers={showLineNumbers} PreTag="div">
-                      {code}
-                    </SyntaxHighlighter>
-                  </div>
                 </div>
               </div>}
 

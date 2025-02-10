@@ -18,4 +18,5 @@ export type PreviewSectionProps = {
   wrapCode: boolean
   showLineNumbers: boolean
   questionNumber: number
+  questionId: string
 }

@@ -263,6 +263,7 @@ export default function PDFGenerator() {
                   <div key={q.id} id={`preview-${q.id}`}>
                     <PreviewSection
                       code={q.code}
+                      questionId={q.id}
                       question={q.question}
                       output={q.output}
                       language={q.language}

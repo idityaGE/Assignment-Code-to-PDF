@@ -1,7 +1,9 @@
+'use client'
+
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Question } from "@/utils/types";
-import { captureCodeImage } from "@/utils/captureCodeImage"; // Import function
+import { captureCodeImage } from "@/utils/captureCodeImage";
 
 interface PDFTemplateProps {
   questions: Question[];
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   codeImage: {
-    width: "100%", // Full width
+    width: "100%",
     height: "auto",
     marginTop: 5,
     borderRadius: 5,
@@ -42,18 +44,32 @@ const styles = StyleSheet.create({
 
 const PDFTemplate = ({ questions }: PDFTemplateProps) => {
   const [codeImages, setCodeImages] = useState<{ [key: string]: string }>({});
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const generateCodeImages = async () => {
+      if (!isClient) return;
+
       const newImages: { [key: string]: string } = {};
       for (const q of questions) {
-        newImages[q.id] = await captureCodeImage(`code-image-${q.id}`);
+        try {
+          const imageData = await captureCodeImage(`code-image-${q.id}`);
+          if (imageData) {
+            newImages[q.id] = imageData;
+          }
+        } catch (error) {
+          console.error(`Failed to capture image for question ${q.id}:`, error);
+        }
       }
       setCodeImages(newImages);
     };
 
     generateCodeImages();
-  }, [questions]);
+  }, [questions, isClient]);
 
   return (
     <Document>
@@ -68,7 +84,11 @@ const PDFTemplate = ({ questions }: PDFTemplateProps) => {
           {/* Code Section (With Image) */}
           <View style={styles.section}>
             <Text style={styles.questionTitle}>Code:</Text>
-            {codeImages[q.id] ? <Image src={codeImages[q.id]} style={styles.codeImage} /> : <Text>Generating...</Text>}
+            {codeImages[q.id] ? (
+              <Image src={codeImages[q.id]} style={styles.codeImage} />
+            ) : (
+              <Text>No image available</Text>
+            )}
           </View>
 
           {/* Output Section */}

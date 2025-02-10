@@ -29,6 +29,7 @@ const Preview_data = () => {
                     wrapCode={wrapCode}
                     showLineNumbers={showLineNumbers}
                     questionNumber={index + 1}
+                    questionId={q.id}
                   />
                 </div>
               ))}
