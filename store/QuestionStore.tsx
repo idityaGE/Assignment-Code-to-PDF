@@ -22,7 +22,7 @@ const QuestionContext = createContext<ContextType | undefined>(undefined);
 export const QuestionProvider = ({ children }: { children: React.ReactNode }) => {
   const [questions, setQuestions] = useLocalStorage<Question[]>("pdfGenerator_questions", [
     {
-      id: "1",
+      id: Date.now().toString(),
       question: IntialQuestion,
       code: IntialCode,
       output: IntialOutput,

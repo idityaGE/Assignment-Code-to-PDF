@@ -62,7 +62,7 @@ const PDFTemplate = ({ questions }: PDFTemplateProps) => {
         const element = document.getElementById(`code-image-${q.id}`);
         if (!element) {
           console.error(`Element with id #code-image-${q.id} not found`);
-          continue; // Skip if element is not found
+          continue;
         }
 
         try {

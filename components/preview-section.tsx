@@ -34,14 +34,14 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
           <AccordionContent>
             <div className="space-y-4 ml-4 mt-3">
 
-              {question && <div>
+              {question !== "" && <div>
                 <h3 className="font-bold">Question:</h3>
                 <p className='whitespace-pre-wrap'>{question}</p>
               </div>}
 
-              {code && <div>
+              {code !== "" && <div>
                 <h3 className="font-bold mb-3">Code:</h3>
-                <div className='code overflow-y-auto'>
+                <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
                   <SyntaxHighlighter
                     language={language}
                     style={style}
@@ -54,7 +54,7 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
                 </div>
               </div>}
 
-              {output && <div>
+              {output !== "" && <div>
                 <h3 className="font-bold mb-3">Output:</h3>
                 <pre className="overflow-y-auto rounded-md bg-[#232323] text-white p-4">{output}</pre>
               </div>}
@@ -64,11 +64,21 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
         </AccordionItem>
       </Accordion>
       {/* Hidden Code Block */}
-      <div id={`code-image-${questionId}`} className="absolute -left-full">
-        <SyntaxHighlighter language={language} style={style} wrapLongLines={wrapCode} showLineNumbers={showLineNumbers} PreTag="div">
-          {code}
-        </SyntaxHighlighter>
-      </div>
+      {code !== "" && (
+        <div id={`code-image-${questionId}`} className="absolute left-[200%]">
+          <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
+            <SyntaxHighlighter
+              language={language}
+              style={style}
+              wrapLongLines={wrapCode}
+              showLineNumbers={showLineNumbers}
+              PreTag="div"
+            >
+              {code}
+            </SyntaxHighlighter>
+          </div>
+        </div>
+      )}
     </CardContent>
   )
 }
