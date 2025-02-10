@@ -54,10 +54,19 @@ const PDFTemplate = ({ questions }: PDFTemplateProps) => {
     const generateCodeImages = async () => {
       if (!isClient) return;
 
+      // Wait for the DOM to update
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       const newImages: { [key: string]: string } = {};
       for (const q of questions) {
+        const element = document.getElementById(`code-image-${q.id}`);
+        if (!element) {
+          console.error(`Element with id #code-image-${q.id} not found`);
+          continue; // Skip if element is not found
+        }
+
         try {
-          const imageData = await captureCodeImage(`code-image-1`);
+          const imageData = await captureCodeImage(`#code-image-${q.id}`);
           if (imageData) {
             newImages[q.id] = imageData;
           }
@@ -70,6 +79,7 @@ const PDFTemplate = ({ questions }: PDFTemplateProps) => {
 
     generateCodeImages();
   }, [questions, isClient]);
+
 
   return (
     <Document>

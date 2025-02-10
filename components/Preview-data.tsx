@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 
 const Preview_data = () => {
-  const {questions, theme, wrapCode, showLineNumbers} = useQuestionContext()
+  const { questions, theme, wrapCode, showLineNumbers } = useQuestionContext()
 
   return (
     <div>
@@ -19,7 +19,7 @@ const Preview_data = () => {
             </CardHeader>
             <div>
               {questions.map((q, index) => (
-                <div key={q.id} id={`preview-${q.id}`}>
+                <div key={q.id}>
                   <PreviewSection
                     code={q.code}
                     question={q.question}

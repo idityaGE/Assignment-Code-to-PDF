@@ -41,7 +41,7 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
 
               {code && <div>
                 <h3 className="font-bold mb-3">Code:</h3>
-                <div className={`overflow-y-auto`} id={`code-image-${questionId}`}>
+                <div className='code overflow-y-auto'>
                   <SyntaxHighlighter
                     language={language}
                     style={style}
@@ -63,6 +63,12 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+      {/* Hidden Code Block */}
+      <div id={`code-image-${questionId}`} className="absolute -left-full">
+        <SyntaxHighlighter language={language} style={style} wrapLongLines={wrapCode} showLineNumbers={showLineNumbers} PreTag="div">
+          {code}
+        </SyntaxHighlighter>
+      </div>
     </CardContent>
   )
 }
