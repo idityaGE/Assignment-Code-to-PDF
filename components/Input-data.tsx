@@ -168,6 +168,15 @@ const Input_Data = () => {
               </Select>
             </div>
             {/* Generate Btn here */}
+            <div className="flex justify-center mt-6">
+              {questions.length > 0 && (
+                <PDFDownloadLink document={<PDFTemplate questions={questions} />} fileName="questions.pdf">
+                  <Button className="bg-blue-600 text-white px-4 py-2 rounded-md">
+                    Download PDF
+                  </Button>
+                </PDFDownloadLink>
+              )}
+            </div>
           </CardFooter>
         </CardContent>
       </Card>
