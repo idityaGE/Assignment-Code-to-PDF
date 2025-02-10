@@ -51,6 +51,13 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
                   >
                     {code}
                   </SyntaxHighlighter>
+
+                  {/* Hidden Div for Image Capture */}
+                  <div id={`code-image-${questionNumber}`} className="absolute -left-full">
+                    <SyntaxHighlighter language={language} style={style} wrapLongLines={wrapCode} showLineNumbers={showLineNumbers} PreTag="div">
+                      {code}
+                    </SyntaxHighlighter>
+                  </div>
                 </div>
               </div>}
 
