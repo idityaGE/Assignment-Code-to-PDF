@@ -6,7 +6,9 @@ export const captureCodeImage = async (elementId: string): Promise<string> => {
   // Wait a short time to ensure rendering
   await new Promise(resolve => setTimeout(resolve, 500));
 
-  const element = document.getElementById(elementId);
+  //@ts-ignore
+  const element = document.querySelector(`#${elementId}`);
+
   if (!element) {
     console.error(`Element with id ${elementId} not found`);
     return "";

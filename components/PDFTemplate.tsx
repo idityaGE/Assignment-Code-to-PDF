@@ -57,7 +57,7 @@ const PDFTemplate = ({ questions }: PDFTemplateProps) => {
       const newImages: { [key: string]: string } = {};
       for (const q of questions) {
         try {
-          const imageData = await captureCodeImage(`code-image-${q.id}`);
+          const imageData = await captureCodeImage(`code-image-1`);
           if (imageData) {
             newImages[q.id] = imageData;
           }
