@@ -171,7 +171,7 @@ const Input_Data = () => {
             <div className="flex justify-center mt-6">
               {questions.length > 0 && (
                 <PDFDownloadLink document={<PDFTemplate questions={questions} />} fileName="questions.pdf">
-                  <Button className="bg-blue-600 text-white px-4 py-2 rounded-md">
+                  <Button variant={'outline'} className="px-4 py-2 rounded-md">
                     Download PDF
                   </Button>
                 </PDFDownloadLink>

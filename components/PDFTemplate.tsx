@@ -55,7 +55,7 @@ const PDFTemplate = ({ questions }: PDFTemplateProps) => {
       if (!isClient) return;
 
       // Wait for the DOM to update
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const newImages: { [key: string]: string } = {};
       for (const q of questions) {
