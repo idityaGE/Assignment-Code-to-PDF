@@ -7,7 +7,6 @@ import { CardContent } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { PreviewSectionProps } from '@/utils/types'
 
-
 export const PreviewSection = ({ code, question, output, language, theme, wrapCode, showLineNumbers, questionNumber, questionId }: PreviewSectionProps) => {
   const [style, setStyle] = useState<any>(a11yDark)
 
@@ -33,40 +32,49 @@ export const PreviewSection = ({ code, question, output, language, theme, wrapCo
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 ml-4 mt-3">
-
-              {question !== "" && <div>
-                <h3 className="font-bold">Question:</h3>
-                <p className='whitespace-pre-wrap'>{question}</p>
-              </div>}
-
-              {code !== "" && <div>
-                <h3 className="font-bold mb-3">Code:</h3>
-                <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
-                  <SyntaxHighlighter
-                    language={language}
-                    style={style}
-                    wrapLongLines={wrapCode}
-                    showLineNumbers={showLineNumbers}
-                    PreTag="div"
-                  >
-                    {code}
-                  </SyntaxHighlighter>
+              {question !== "" && (
+                <div>
+                  <h3 className="font-bold">Question:</h3>
+                  <p className='whitespace-pre-wrap'>{question}</p>
                 </div>
-              </div>}
+              )}
 
-              {output !== "" && <div>
-                <h3 className="font-bold mb-3">Output:</h3>
-                <pre className="overflow-y-auto rounded-md bg-[#232323] text-white p-4">{output}</pre>
-              </div>}
+              {code !== "" && (
+                <div>
+                  <h3 className="font-bold mb-3">Code:</h3>
+                  <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
+                    <SyntaxHighlighter
+                      language={language}
+                      style={style}
+                      wrapLongLines={wrapCode}
+                      showLineNumbers={showLineNumbers}
+                      PreTag="div"
+                    >
+                      {code}
+                    </SyntaxHighlighter>
+                  </div>
+                </div>
+              )}
 
+              {output !== "" && (
+                <div>
+                  <h3 className="font-bold mb-3">Output:</h3>
+                  <pre className="overflow-y-auto rounded-md bg-[#232323] text-white p-4">{output}</pre>
+                </div>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      {/* Hidden Code Block */}
+
+      {/* Hidden Code Block - Fixed positioning */}
       {code !== "" && (
-        <div id={`code-image-${questionId}`} className="absolute left-[200%]">
-          <div className={`overflow-y-auto ${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
+        <div
+          id={`code-image-${questionId}`}
+          className="fixed top-[-9999px] left-[-9999px] opacity-0 pointer-events-none"
+          aria-hidden="true"
+        >
+          <div className={`${wrapCode ? 'whitespace-pre-wrap' : 'whitespace-pre'}`}>
             <SyntaxHighlighter
               language={language}
               style={style}
